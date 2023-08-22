@@ -12,6 +12,7 @@ const completedItems = [];
 const allDropdowns = [];
 const categoryColors = ["#FF5733", "#33FF57", "#5733FF"];
 let allDropzones;
+const apiURL = "https://browser-stickies-d17128396f19.herokuapp.com";
 
 document.addEventListener("DOMContentLoaded", async function () {
   await showCategories();
@@ -50,7 +51,9 @@ function createDropzones() {
         } else {
           taskList.insertBefore(sourceListItem, afterElem);
         }
-        axios.patch(`/api/v1/theTasks/${sourceTaskID}`, { category: "" });
+        axios.patch(`${apiURL}/api/v1/theTasks/${sourceTaskID}`, {
+          category: "",
+        });
       } else {
         dropzone.classList.remove("drag-target");
         sourceListItem.classList.remove("listItem");
@@ -63,7 +66,7 @@ function createDropzones() {
         }
 
         const newCategoryName = dropzone.getAttribute("data-category-name");
-        axios.patch(`/api/v1/theTasks/${sourceTaskID}`, {
+        axios.patch(`${apiURL}/api/v1/theTasks/${sourceTaskID}`, {
           category: newCategoryName,
         });
       }
@@ -147,7 +150,7 @@ handleThemeSwitching();
 
 async function showTasks() {
   try {
-    const response = await axios.get("/api/v1/theTasks"); // Fetch existing tasks from the server
+    const response = await axios.get(`${apiURL}/api/v1/theTasks`); // Fetch existing tasks from the server
 
     const existingTasks = response.data;
 
@@ -182,7 +185,7 @@ async function showTasks() {
 }
 async function showCategories() {
   try {
-    const response = await axios.get("/api/v1/theCategories");
+    const response = await axios.get(`${apiURL}/api/v1/theCategories`);
     const existingCategories = response.data;
     existingCategories.categories.forEach((category) => {
       boxContainer.appendChild(createCategoryBox(category.name, category._id));
@@ -213,7 +216,9 @@ async function addTask() {
     } else {
       const content = userInput.value;
       //dont append all at once
-      const response = await axios.post("/api/v1/theTasks", { content });
+      const response = await axios.post(`${apiURL}/api/v1/theTasks`, {
+        content,
+      });
       const myTask = response.data;
       const listItem = createListItem(
         content,
@@ -437,7 +442,7 @@ async function addsItem(e) {
   }
   generatedCategoryItems.push(categoryItem);
   try {
-    const response = await axios.patch(`api/v1/theTasks/${taskID}`, {
+    const response = await axios.patch(`${apiURL}api/v1/theTasks/${taskID}`, {
       category: optionText,
     });
   } catch (error) {
@@ -462,9 +467,9 @@ async function deleteItem(e, arr) {
       const taskID = parentListItem.getAttribute("data-catitem-id");
       console.log(taskID);
       parentListItem.remove();
-      await axios.delete(`/api/v1/theTasks/${taskID}`);
+      await axios.delete(`${apiURL}/api/v1/theTasks/${taskID}`);
     } else {
-      await axios.delete(`/api/v1/theTasks/${taskID}`);
+      await axios.delete(`${apiURL}/api/v1/theTasks/${taskID}`);
       parentListItem.remove();
     }
   } catch (error) {
@@ -485,7 +490,7 @@ async function deleteCategory(e, arr) {
     if (parentElem.tagName === "DIV") {
       //if the item to delete is a WHOLE CATEGORY/BOX
       const categoryID = parentElem.getAttribute("data-category-id");
-      await axios.delete(`/api/v1/theCategories/${categoryID}`);
+      await axios.delete(`${apiURL}/api/v1/theCategories/${categoryID}`);
       parentElem.remove();
     }
   } catch (error) {
@@ -589,7 +594,7 @@ function rename(element) {
       saveChanges(elementParent, "data-category-name");
       const newCatName = elementParent.getAttribute("data-category-name");
       const categoryID = elementParent.getAttribute("data-category-id");
-      axios.patch(`/api/v1/theCategories/${categoryID}`, {
+      axios.patch(`${apiURL}/api/v1/theCategories/${categoryID}`, {
         name: newCatName,
       });
     }
@@ -620,7 +625,7 @@ function addCategoryToDom() {
         inputWrapper.style.display = "none";
         //inputWrapper.removeChild(enterName);
         try {
-          const response = await axios.post("/api/v1/theCategories/", {
+          const response = await axios.post(`${apiURL}/api/v1/theCategories/`, {
             name: categoryName,
           });
           console.log(response);
