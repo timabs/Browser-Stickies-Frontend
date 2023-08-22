@@ -555,7 +555,7 @@ label[style="display: grid"] .selectCategory {
 
 .itemSpan {
   display: flex;
-  margin-left: 2.1vw;
+  margin-left: 1.1vw;
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
