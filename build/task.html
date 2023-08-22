@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="main-style.css" />
+    <title>Browser Stickies!</title>
+  </head>
+  <body id="bodyBoy">
+    <div class="theme-switch-container">
+      <input
+        type="radio"
+        class="theme-switch"
+        name="theme-switch"
+        id="theme-switch1"
+        data-theme="theme-light"
+      />
+      <label for="theme-switch1" class="switch-label">Light</label>
+      <input
+        type="radio"
+        class="theme-switch"
+        name="theme-switch"
+        id="theme-switch2"
+        data-theme="theme-dark"
+      />
+      <label for="theme-switch2" class="switch-label">Dark</label>
+      <input
+        type="radio"
+        class="theme-switch"
+        name="theme-switch"
+        id="theme-switch3"
+        data-theme="theme-pastel"
+      />
+      <label for="theme-switch3" class="switch-label">Pastel</label>
+      <input
+        type="radio"
+        class="theme-switch"
+        name="theme-switch"
+        id="theme-switch4"
+        data-theme="theme-nature"
+      />
+      <label for="theme-switch4" class="switch-label">Nature</label>
+    </div>
+
+    <div id="allDiv">
+      <div class="centering-container">
+        <h1 class="titleHeader">Get it Done!</h1>
+      </div>
+
+      <div id="categoryUserWrap">
+        <div id="categoryContainer">
+          <button id="categoryButton">Create Category</button>
+          <div id="inputFieldWrapper"></div>
+        </div>
+        <input
+          type="text"
+          id="userInput"
+          placeholder="What do you need to get done?"
+        />
+      </div>
+
+      <div id="listAndBoxWrapper">
+        <div id="listContainer" data-zone="dropzone">
+          <span id="genTasks" class="subheaders">General Tasks</span>
+          <ol id="taskList"></ol>
+        </div>
+        <div class="boxContainer">
+          <span class="subheaders">Categories</span>
+        </div>
+      </div>
+    </div>
+    <div id="itemsCompletedContainer">
+      <div class="itemsCompleted">
+        <span>Total Items Completed: </span><span id="completedCount">0</span>
+      </div>
+    </div>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"
+      integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
