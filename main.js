@@ -13,6 +13,7 @@ const allDropdowns = [];
 const categoryColors = ["#FF5733", "#33FF57", "#5733FF"];
 let allDropzones;
 const apiURL = "https://browser-stickies-d17128396f19.herokuapp.com";
+axios.defaults.withCredentials = true;
 
 document.addEventListener("DOMContentLoaded", async function () {
   await showCategories();
