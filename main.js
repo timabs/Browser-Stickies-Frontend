@@ -12,7 +12,7 @@ const completedItems = [];
 const allDropdowns = [];
 const categoryColors = ["#FF5733", "#33FF57", "#5733FF"];
 let allDropzones;
-const apiURL = "https://browser-stickies-d17128396f19.herokuapp.com";
+const apiURL = "https://api.stickynotes.lol";
 axios.defaults.withCredentials = true;
 
 document.addEventListener("DOMContentLoaded", async function () {
