@@ -458,7 +458,6 @@ async function deleteItem(e, arr) {
   const delButton = e.target;
   const parentSpan = delButton.parentNode;
   const parentListItem = parentSpan.parentNode;
-  const taskID = parentListItem.getAttribute("data-task-id");
   const index = arr.indexOf(parentListItem);
   if (index !== -1) {
     arr.splice(index, 1);
@@ -470,6 +469,7 @@ async function deleteItem(e, arr) {
       parentListItem.remove();
       await axios.delete(`${apiURL}/api/v1/theTasks/${taskID}`);
     } else {
+      const taskID = parentListItem.getAttribute("data-task-id");
       await axios.delete(`${apiURL}/api/v1/theTasks/${taskID}`);
       parentListItem.remove();
     }
