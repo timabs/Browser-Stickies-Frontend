@@ -456,8 +456,7 @@ async function addsItem(e) {
 async function deleteItem(e, arr) {
   e.stopPropagation();
   const delButton = e.target;
-  const parentSpan = delButton.parentNode;
-  const parentListItem = parentSpan.parentNode;
+  const parentListItem = delButton.parentNode;
   const index = arr.indexOf(parentListItem);
   if (index !== -1) {
     arr.splice(index, 1);
