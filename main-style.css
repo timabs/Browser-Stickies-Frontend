@@ -485,7 +485,6 @@ label[style="display: grid"] .selectCategory {
   justify-content: center;
   align-items: center;
   overflow-wrap: break-word;
-  word-break: break-all;
   cursor: move;
   margin-inline: 1vw;
 }
