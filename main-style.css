@@ -530,6 +530,7 @@ label[style="display: grid"] .selectCategory {
   background-position: center;
   cursor: pointer;
   margin-top: 0.45vw;
+  margin-left: 0.25vw;
   opacity: 0; /* Initially hide the buttons */
   transition: opacity 0.2s ease-in-out; /* Apply transition to opacity */
 }

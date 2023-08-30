@@ -288,8 +288,9 @@ const createListItem = (content, taskID, itemClass, dataAttr) => {
   //   makeHidden(newPlus);
   //   makeHidden(newDel);
   // });
-  listItem.addEventListener("click", (e) => {
+  listItem.addEventListener("click", async (e) => {
     listItem.classList.add("completed");
+    const taskID = e.getAttribute("data-task-id");
     // makeHidden();
     setTimeout(() => {
       completedItems.push(listItem);
@@ -299,7 +300,9 @@ const createListItem = (content, taskID, itemClass, dataAttr) => {
         generatedListItems.splice(index, 1);
       }
       updateCompletedCount();
+      localStorage.setItem("totalCompletedCount", completedItems.length);
     }, 1000);
+    await axios.delete(`${apiURL}api/v1/theTasks/${taskID}`);
   });
   return listItem;
 };
