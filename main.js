@@ -290,7 +290,7 @@ const createListItem = (content, taskID, itemClass, dataAttr) => {
   // });
   listItem.addEventListener("click", async (e) => {
     listItem.classList.add("completed");
-    const taskID = e.getAttribute("data-task-id");
+    const taskID = listItem.getAttribute("data-task-id");
     // makeHidden();
     setTimeout(() => {
       completedItems.push(listItem);
