@@ -178,7 +178,7 @@ async function showTasks() {
       }
     });
 
-    updateCompletedCount();
+    debounce(updateCompletedCount, 1000);
   } catch (error) {
     // Update completed count after adding existing tasks
     console.error("Error fetching existing tasks: ", error);
@@ -290,7 +290,11 @@ const createListItem = (content, taskID, itemClass, dataAttr) => {
   // });
   listItem.addEventListener("click", async (e) => {
     listItem.classList.add("completed");
-    const taskID = listItem.getAttribute("data-task-id");
+    const taskID = getAttributeOrFallback(
+      listItem,
+      "data-task-id",
+      "data-catitem-id"
+    );
     // makeHidden();
     setTimeout(() => {
       completedItems.push(listItem);
@@ -299,8 +303,7 @@ const createListItem = (content, taskID, itemClass, dataAttr) => {
       if (index !== -1) {
         generatedListItems.splice(index, 1);
       }
-      updateCompletedCount();
-      localStorage.setItem("totalCompletedCount", completedItems.length);
+      debounce(updateCompletedCount, 1000);
     }, 1000);
     try {
       await axios.delete(`${apiURL}/api/v1/theTasks/${taskID}`);
@@ -666,6 +669,7 @@ database/backend
 */
 function updateCompletedCount() {
   const completedCount = document.getElementById("completedCount");
+  localStorage.setItem("totalCompletedCount", completedItems.length);
   completedCount.textContent = localStorage
     .getItem("totalCompletedCount")
     .toString();
