@@ -666,5 +666,7 @@ database/backend
 */
 function updateCompletedCount() {
   const completedCount = document.getElementById("completedCount");
-  completedCount.textContent = completedItems.length.toString();
+  completedCount.textContent = localStorage
+    .getItem("totalCompletedCount")
+    .toString();
 }
