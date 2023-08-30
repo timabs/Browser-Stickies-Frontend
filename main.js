@@ -302,7 +302,11 @@ const createListItem = (content, taskID, itemClass, dataAttr) => {
       updateCompletedCount();
       localStorage.setItem("totalCompletedCount", completedItems.length);
     }, 1000);
-    await axios.delete(`${apiURL}api/v1/theTasks/${taskID}`);
+    try {
+      await axios.delete(`${apiURL}/api/v1/theTasks/${taskID}`);
+    } catch (error) {
+      console.log(error);
+    }
   });
   return listItem;
 };
