@@ -590,23 +590,29 @@ function rename(element) {
   element.focus();
 
   element.addEventListener("blur", () => {
-    const elementParent = element.parentNode;
-    saveChanges(element, "data-category");
-    saveChanges(elementParent, "data-category-name");
+    const newValue = element.textContent.trim();
+    if (newValue !== "") {
+      const elementParent = element.parentNode;
+      saveChanges(element, "data-category");
+      saveChanges(elementParent, "data-category-name");
+    }
   });
 
   element.addEventListener("keydown", async (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
 
-      const elementParent = element.parentNode;
-      saveChanges(element, "data-category");
-      saveChanges(elementParent, "data-category-name");
-      const newCatName = elementParent.getAttribute("data-category-name");
-      const categoryID = elementParent.getAttribute("data-category-id");
-      axios.patch(`${apiURL}/api/v1/theCategories/${categoryID}`, {
-        name: newCatName,
-      });
+      const newValue = element.textContent.trim();
+      if (newValue !== "") {
+        const elementParent = element.parentNode;
+        saveChanges(element, "data-category");
+        saveChanges(elementParent, "data-category-name");
+        const newCatName = elementParent.getAttribute("data-category-name");
+        const categoryID = elementParent.getAttribute("data-category-id");
+        axios.patch(`${apiURL}/api/v1/theCategories/${categoryID}`, {
+          name: newCatName,
+        });
+      }
     }
   });
 }
