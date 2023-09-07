@@ -229,7 +229,6 @@ async function addTask() {
       );
       taskList.appendChild(listItem);
 
-      console.log("Response:", response);
       userInput.value = "";
       setTimeout(() => {
         userInput.placeholder = inputPlaceholder;
@@ -474,7 +473,6 @@ async function deleteItem(e, arr) {
   try {
     if (parentListItem.classList.contains("categoryItem")) {
       const taskID = parentListItem.getAttribute("data-catitem-id");
-      console.log(taskID);
       parentListItem.remove();
       await axios.delete(`${apiURL}/api/v1/theTasks/${taskID}`);
     } else {
@@ -644,7 +642,7 @@ function addCategoryToDom() {
           const response = await axios.post(`${apiURL}/api/v1/theCategories/`, {
             name: categoryName,
           });
-          console.log(response);
+
           const categoryID = response.data.data._id;
           const newCategory = createCategoryBox(categoryName, categoryID);
           boxContainer.appendChild(newCategory);
