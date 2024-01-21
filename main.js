@@ -12,7 +12,7 @@ const completedItems = [];
 const allDropdowns = [];
 const categoryColors = ["#FF5733", "#33FF57", "#5733FF"];
 let allDropzones;
-const apiURL = "https://api.stickynotes.lol";
+const apiURL = "https://sticky-notes-0fbt.onrender.com";
 axios.defaults.withCredentials = true;
 
 document.addEventListener("DOMContentLoaded", async function () {
@@ -664,13 +664,7 @@ function addCategoryToDom() {
     inputWrapper.removeChild(enterName);
   });
 }
-//customization options?
-//sounds for completing tasks, anim/sound for completing a category of at least 5?
 
-/*learn something for backend -> put into database to save users lists
-when they come back - attach to accounts? (sign in)
-database/backend
-*/
 function updateCompletedCount() {
   const completedCount = document.getElementById("completedCount");
   localStorage.setItem("totalCompletedCount", completedItems.length);
