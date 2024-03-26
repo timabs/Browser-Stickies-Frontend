@@ -1,3 +1,7 @@
+* {
+  font-family: "Roboto";
+}
+
 :root {
   --bg-color: #d2d3db;
   --small-head-color: #4684ad;
@@ -137,7 +141,6 @@ input[type="text"] {
   text-align: center;
   overflow-wrap: break-word;
   word-break: break-all;
-  font-family: "Oswald";
   font-weight: extra-light;
   font-size: 1.5em;
 }
@@ -172,12 +175,10 @@ label[style="display: grid"] .selectCategory {
   align-content: center;
   align-items: start;
   justify-items: center;
-  font-family: "Oswald";
   text-align: center;
 }
 
 #categoryInput {
-  font-family: "Oswald";
   font-size: 1.25em;
 }
 
@@ -198,17 +199,15 @@ label[style="display: grid"] .selectCategory {
 #categoryButton {
   background-color: var(--cat-field);
   border-color: var(--cat-field-border);
-  font-family: "Oswald";
-  font-weight: 400;
+  font-weight: bold;
   width: 8vw;
   height: 5vh;
-  font-size: 1.07vw;
+  font-size: 1.15rem;
   border-radius: 0.5vw;
 }
 
 .categoryName {
   display: inline-block;
-  font-family: "Oswald", sans-serif;
   color: var(--small-head-color);
   margin: 3.4%;
   font-size: calc(1.5em / 16 * 100vw);
@@ -273,24 +272,6 @@ label[style="display: grid"] .selectCategory {
   padding: 10px;
   z-index: 1;
   /* Set a higher z-index to make sure the input field appears above other elements */
-}
-
-@font-face {
-  font-family: "Oswald";
-  src: url("Assets/Fonts/Oswald-Bold.ttf") format("truetype");
-  font-weight: bold;
-}
-
-@font-face {
-  font-family: "Oswald";
-  src: url("Assets/Fonts/Oswald-ExtraLight.ttf") format("truetype");
-  font-weight: 100;
-}
-
-@font-face {
-  font-family: "Oswald";
-  src: url("Assets/Fonts/Oswald-Regular.ttf") format("truetype");
-  font-weight: regular;
 }
 
 #allDiv {
@@ -361,7 +342,6 @@ label[style="display: grid"] .selectCategory {
   display: flex;
   align-items: center;
   color: #f2f2f2;
-  font-family: "Oswald";
   font-weight: extra-light;
   text-align: center;
   font-size: 1.2em;
@@ -389,7 +369,7 @@ label[style="display: grid"] .selectCategory {
 
 .titleHeader {
   text-align: center;
-  font-family: "Oswald", sans-serif;
+
   font-weight: bold;
   font-size: 7.5vw;
   margin-block-start: 0.1em;
@@ -445,7 +425,6 @@ label[style="display: grid"] .selectCategory {
   padding-right: 5px;
   background-color: #d2d3db;
   border-radius: 0.5vw;
-  font-family: "Oswald", sans-serif;
   font-weight: regular;
   font-size: larger;
   cursor: move;
@@ -475,7 +454,6 @@ label[style="display: grid"] .selectCategory {
   margin-bottom: 5%;
   margin-left: 3%;
   margin-right: 3%;
-  font-family: "Oswald", sans-serif;
   font-weight: regular;
   font-size: larger;
   flex-wrap: wrap;
@@ -543,7 +521,7 @@ label[style="display: grid"] .selectCategory {
   align-items: center;
   justify-items: center;
   align-content: center;
-  font-family: "Oswald";
+  font-family: "Roboto";
   transition: all 0.3s ease-in-out;
 }
 
