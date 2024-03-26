@@ -8,7 +8,7 @@ const boxContainer = document.querySelector(".boxContainer");
 const allCategories = [];
 const generatedListItems = [];
 const generatedCategoryItems = [];
-const completedItems = [];
+let completedItemsCount = 0;
 const allDropdowns = [];
 const categoryColors = ["#FF5733", "#33FF57", "#5733FF"];
 let allDropzones;
@@ -83,7 +83,7 @@ function debounce(func, delay) {
   let timeoutId;
 
   return (...args) => {
-    clearTimeout(timeoutId);
+    if (timeoutId) clearTimeout(timeoutId);
     timeoutId = setTimeout(() => {
       func(...args);
     }, delay);
@@ -213,7 +213,7 @@ categoryButton.addEventListener("click", addCategoryToDom);
 async function addTask() {
   try {
     if (userInput.value === "" || userInput.value === undefined) {
-      userInput.placeholder = "It can't be empty bozo.";
+      userInput.placeholder = "It can't be empty.";
     } else {
       const content = userInput.value;
       //dont append all at once
@@ -238,6 +238,7 @@ async function addTask() {
     console.error("Error creating task: ", error);
   }
 }
+const debouncedCounter = debounce(updateCompletedCount, 1000);
 const createListItem = (content, taskID, itemClass, dataAttr) => {
   let listItem = document.createElement("li");
   listItem.classList.add(itemClass);
@@ -278,32 +279,24 @@ const createListItem = (content, taskID, itemClass, dataAttr) => {
     openDropdown(e, newDropdown);
     updateDropdown(allDropdowns);
   });
-
-  // listItem.addEventListener("mouseenter", () => {
-  //   makeVisible(newPlus);
-  //   makeVisible(newDel);
-  // });
-  // listItem.addEventListener("mouseleave", () => {
-  //   makeHidden(newPlus);
-  //   makeHidden(newDel);
-  // });
+  //complete item
   listItem.addEventListener("click", async (e) => {
+    debouncedCounter();
     listItem.classList.add("completed");
     const taskID = getAttributeOrFallback(
       listItem,
       "data-task-id",
       "data-catitem-id"
     );
-    // makeHidden();
+
     setTimeout(() => {
-      completedItems.push(listItem);
       listItem.remove();
       const index = generatedListItems.indexOf(listItem);
       if (index !== -1) {
         generatedListItems.splice(index, 1);
       }
-      debounce(updateCompletedCount, 1000);
     }, 1000);
+
     try {
       await axios.delete(`${apiURL}/api/v1/theTasks/${taskID}`);
     } catch (error) {
@@ -666,9 +659,10 @@ function addCategoryToDom() {
 }
 
 function updateCompletedCount() {
-  const completedCount = document.getElementById("completedCount");
-  localStorage.setItem("totalCompletedCount", completedItems.length);
-  completedCount.textContent = localStorage
+  completedItemsCount++;
+  const completedCountDiv = document.getElementById("completedCount");
+  localStorage.setItem("totalCompletedCount", completedItemsCount);
+  completedCountDiv.textContent = localStorage
     .getItem("totalCompletedCount")
     .toString();
 }
