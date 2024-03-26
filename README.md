@@ -9,10 +9,6 @@
 - Tasks completed count for the session
 
 **To fix:**
+
 - Make the layout more responsive/add a mobile layout
-- Debounce clicks for completing tasks
 - Generally fix 'task completed count'
-- Fix the patch request for moving tasks between categories
-- Fix the patch request for moving tasks from General Tasks to a category using the plus button
-
-

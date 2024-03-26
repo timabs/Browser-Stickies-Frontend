@@ -238,8 +238,9 @@ async function addTask() {
     console.error("Error creating task: ", error);
   }
 }
-const debouncedCounter = debounce(updateCompletedCount, 1000);
+
 const createListItem = (content, taskID, itemClass, dataAttr) => {
+  const debouncedCounter = debounce(updateCompletedCount, 1000);
   let listItem = document.createElement("li");
   listItem.classList.add(itemClass);
   if (taskID) {
