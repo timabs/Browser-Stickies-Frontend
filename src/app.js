@@ -11,7 +11,8 @@ import {
 import axios from "axios";
 import { checkUID } from "./uid.js";
 import { createDropzones, updateDropzones } from "./dnd/dropzones.js";
-import debounce from "./utils/debounce.js";
+import { createListItem } from "./tasks/createTask.js";
+import { updateDropdown } from "./state/updateState.js";
 
 const body = document.getElementById("main-body");
 const userInput = document.getElementById("userInput");
@@ -19,11 +20,10 @@ const taskList = document.getElementById("taskList");
 const inputPlaceholder = "What do you need to get done?";
 const categoryButton = document.getElementById("categoryButton");
 const boxContainer = document.querySelector(".boxContainer");
-const allCategories = [];
-const generatedListItems = [];
+export const allCategories = [];
+export const generatedListItems = [];
 const generatedCategoryItems = [];
-let completedItemsCount = 0;
-const allDropdowns = [];
+export const allDropdowns = [];
 let allDropzones;
 axios.defaults.withCredentials = true;
 
@@ -33,79 +33,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   await showTasks();
   createDropzones(allDropzones, taskList);
 });
-
-// function createDropzones() {
-//   allDropzones = updateDropzones();
-
-//   const dzArray = Array.from(allDropzones);
-
-//   dzArray.forEach((dropzone, index) => {
-//     dropzone.addEventListener("dragover", (e) => {
-//       e.preventDefault();
-//       dropzone.classList.add("drag-target");
-//     });
-//     dropzone.addEventListener("dragleave", (e) => {
-//       e.preventDefault();
-//       dropzone.classList.remove("drag-target");
-//     });
-
-//     dropzone.addEventListener("drop", (e) => {
-//       e.preventDefault();
-//       const sourceTaskId = e.dataTransfer.getData("text/plain");
-//       const sourceListItem = document.querySelector(".dragging");
-
-//       if (dropzone.id === "listContainer") {
-//         sourceListItem.classList.remove("categoryItem");
-//         sourceListItem.classList.add("listItem");
-//         dropzone.classList.remove("drag-target");
-
-//         const afterElem = getDragAfterElement(dropzone, e.clientY); //e.clientY -> y pos of mouse on screen
-//         if (afterElem === null) {
-//           taskList.appendChild(sourceListItem);
-//         } else {
-//           taskList.insertBefore(sourceListItem, afterElem);
-//         }
-//         patchTask(sourceTaskId, "");
-//       } else {
-//         dropzone.classList.remove("drag-target");
-//         sourceListItem.classList.remove("listItem");
-//         sourceListItem.classList.add("categoryItem");
-//         const afterElem = getDragAfterElement(dropzone, e.clientY); //e.clientY -> y pos of mouse on screen
-//         if (afterElem === null) {
-//           dropzone.appendChild(sourceListItem);
-//         } else {
-//           dropzone.insertBefore(sourceListItem, afterElem);
-//         }
-
-//         const newCategoryName = dropzone.getAttribute("data-category-name");
-//         patchTask(sourceTaskId, newCategoryName);
-//       }
-//     });
-//   });
-// }
-
-// function updateDropzones() {
-//   return document.querySelectorAll('[data-zone="dropzone"]');
-// }
-
-// function getDragAfterElement(dropzone, y) {
-//   const draggables = [
-//     ...dropzone.querySelectorAll(".draggable:not(.dragging)"),
-//   ]; //gets all draggables in container except the one being dragged
-
-//   return draggables.reduce(
-//     (closest, child) => {
-//       const box = child.getBoundingClientRect();
-//       const offset = y - box.top - box.height / 2;
-//       if (offset < 0 && offset > closest.offset) {
-//         return { offset: offset, element: child };
-//       } else {
-//         return closest;
-//       }
-//     },
-//     { offset: Number.NEGATIVE_INFINITY }
-//   ).element;
-// }
 
 function handleThemeSwitching() {
   const themeSwitches = document.querySelectorAll(".theme-switch");
@@ -222,167 +149,14 @@ async function addTask() {
     console.error("Error creating task: ", error);
   }
 }
-// tasks - create dom list item
-const createListItem = (content, taskID, itemClass, dataAttr) => {
-  const debouncedCounter = debounce(updateCompletedCount, 1000);
-  let listItem = document.createElement("li");
-  listItem.classList.add(itemClass);
-  if (taskID) {
-    listItem.setAttribute(dataAttr, taskID);
-  }
-  listItem.setAttribute("draggable", true);
 
-  listItem.addEventListener("dragstart", (e) => {
-    e.dataTransfer.setData("text/plain", taskID);
-    listItem.classList.add("dragging");
-
-    e.dataTransfer.setDragImage(listItem, 100, 0);
-  });
-
-  listItem.addEventListener("dragend", () => {
-    listItem.classList.remove("dragging");
-  });
-
-  listItem.addEventListener("dragover", (e) => {
-    e.preventDefault();
-  });
-
-  listItem.appendChild(createSpan(content));
-
-  let newDel = listItem.appendChild(genListButton("delete"));
-  newDel.addEventListener("click", (e) => {
-    deleteItem(e, generatedListItems);
-  });
-
-  let newPlus = listItem.appendChild(genListButton("plus"));
-  let newDropdown = createDropdown();
-  newPlus.insertAdjacentElement("afterend", newDropdown);
-  generatedListItems.push(listItem);
-
-  newPlus.addEventListener("click", (e) => {
-    e.stopPropagation();
-    openDropdown(e, newDropdown);
-    updateDropdown(allDropdowns);
-  });
-  //complete item
-  listItem.addEventListener("click", async (e) => {
-    debouncedCounter();
-    listItem.classList.add("completed");
-    const taskId = getAttributeOrFallback(
-      listItem,
-      "data-task-id",
-      "data-catitem-id"
-    );
-
-    setTimeout(() => {
-      listItem.remove();
-      const index = generatedListItems.indexOf(listItem);
-      if (index !== -1) {
-        generatedListItems.splice(index, 1);
-      }
-    }, 1000);
-
-    await deleteTask(taskId);
-  });
-  return listItem;
-};
-
-function createSpan(text) {
-  let newSpan = document.createElement("span");
-  newSpan.classList.add("itemSpan");
-  newSpan.innerText = text;
-  return newSpan;
-}
-
-const createDropdown = () => {
-  let label = document.createElement("label");
-  label.innerText = "Choose a category";
-  label.setAttribute("class", "labelStyle");
-  label.style.display = "none";
-
-  let select = document.createElement("select");
-  select.classList.add("selectCategory");
-  select.style.display = "none";
-
-  let initialOption = document.createElement("option");
-  initialOption.textContent = "Select a category";
-  select.appendChild(initialOption);
-
-  label.appendChild(select);
-
-  allDropdowns.push(select);
-
-  select.addEventListener("click", (e) => {
-    e.stopPropagation();
-  });
-  select.addEventListener("change", addsItem);
-  return label;
-};
-
-const openDropdown = (e, dropdown) => {
-  if (dropdown.style.display === "none" || dropdown.style.display === "") {
-    dropdown.style.transition = "opacity ease-in-out 0.3s";
-    dropdown.style.opacity = "1";
-    setTimeout(() => {
-      dropdown.style.display = "grid";
-    });
-    dropdown.querySelector(".selectCategory").style.display = "block";
-  } else {
-    dropdown.style.transition = "display ease-in-out 0.3s";
-    dropdown.style.opacity = "0";
-    setTimeout(() => {
-      dropdown.style.display = "none";
-    });
-  }
-  e.stopPropagation();
-
-  const select = dropdown.querySelector(".selectCategory");
-  //select.style.display = dropdown.style.display === 'grid' ? 'block' : 'none';
-
-  if (dropdown.style.display === "grid") {
-    // Add a short delay to set the display property of the select element to 'block'
-    setTimeout(() => {
-      select.style.display = "block";
-    }, 100);
-  }
-};
-
-const updateDropdown = (dropdowns) => {
-  const addedOptions = new Set();
-  dropdowns.forEach((dropdown) => {
-    dropdown.innerHTML = "";
-
-    //add initialoption to each dropdown
-    const initialOption = document.createElement("option");
-    initialOption.textContent = "Select a category";
-    dropdown.appendChild(initialOption);
-  });
-
-  allCategories.forEach((category) => {
-    const categoryText = category.querySelector("h3").innerText;
-    if (!addedOptions.has(categoryText)) {
-      addedOptions.add(categoryText);
-
-      // Create a new option element for each category
-      const option = document.createElement("option");
-      option.innerText = categoryText;
-
-      // Add the option to each dropdown
-      dropdowns.forEach((dropdown) => {
-        const optionClone = option.cloneNode(true);
-        dropdown.appendChild(optionClone);
-      });
-    }
-  });
-};
-
-function getAttributeOrFallback(element, attribute1, attribute2) {
+export function getAttributeOrFallback(element, attribute1, attribute2) {
   return element.hasAttribute(attribute1)
     ? element.getAttribute(attribute1)
     : element.getAttribute(attribute2);
 }
 
-async function addsItem(e) {
+export async function addItemToCategory(e) {
   let listItem = e.target.closest("li");
   const taskId = getAttributeOrFallback(
     listItem,
@@ -459,16 +233,14 @@ async function deleteCategory(e, arr) {
   updateDropdown(allDropdowns);
 }
 
-function genListButton(type) {
+export function genListButton(type) {
   if (type === "delete") {
     const deleteButton = document.createElement("button");
     deleteButton.classList.add("delete-button");
-    // deleteButton.classList.add("listHidden");
     return deleteButton;
   } else if (type === "plus") {
     const plusButton = document.createElement("button");
     plusButton.classList.add("plus-button");
-    // plusButton.classList.add("listHidden");
     plusButton.setAttribute("data-has-dropdown", "false");
 
     return plusButton;
@@ -488,7 +260,6 @@ function createCategoryBox(name, categoryID) {
   );
   if (!categoryExists) {
     const newCategory = document.createElement("div"); //make category box
-
     const categoryDel = genListButton("categoryDel"); //make category delete button
     categoryDel.style.marginTop = 0;
 
@@ -603,13 +374,4 @@ function addCategoryToDom() {
     inputWrapper.style.display = "none";
     inputWrapper.removeChild(enterName);
   });
-}
-
-function updateCompletedCount() {
-  completedItemsCount++;
-  const completedCountDiv = document.getElementById("completedCount");
-  localStorage.setItem("totalCompletedCount", completedItemsCount);
-  completedCountDiv.textContent = localStorage
-    .getItem("totalCompletedCount")
-    .toString();
 }
