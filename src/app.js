@@ -27,12 +27,6 @@ let allDropzones;
 axios.defaults.withCredentials = true;
 
 document.addEventListener("DOMContentLoaded", async function () {
-  try {
-    let id = localStorage.getItem("userId");
-    console.log(id);
-  } catch (error) {
-    console.log(error);
-  }
   checkUID();
   await showCategories();
   await showTasks();
