@@ -1,8 +1,4 @@
-import { v4 } from "uuid";
-
-export function genNewUID() {
-  v4();
-}
+import { v4 as genNewUID } from "uuid";
 
 export function checkUID() {
   let userId = localStorage.getItem("userId");
