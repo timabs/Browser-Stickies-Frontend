@@ -11,6 +11,7 @@ import {
 import axios from "axios";
 import { checkUID } from "./uid.js";
 import { createDropzones, updateDropzones } from "./dnd/dropzones.js";
+import debounce from "./utils/debounce.js";
 
 const body = document.getElementById("main-body");
 const userInput = document.getElementById("userInput");
@@ -32,16 +33,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   await showTasks();
   createDropzones(allDropzones, taskList);
 });
-function debounce(func, delay) {
-  let timeoutId;
-
-  return (...args) => {
-    if (timeoutId) clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => {
-      func(...args);
-    }, delay);
-  };
-}
 
 // function createDropzones() {
 //   allDropzones = updateDropzones();
@@ -206,11 +197,6 @@ userInput.addEventListener("keydown", function (e) {
 });
 
 categoryButton.addEventListener("click", addCategoryToDom);
-// categoryButton.addEventListener('keydown', (e)=> {
-//     if(e.key === "escape") {
-
-//     }
-// });
 
 async function addTask() {
   try {
@@ -236,7 +222,7 @@ async function addTask() {
     console.error("Error creating task: ", error);
   }
 }
-
+// tasks - create dom list item
 const createListItem = (content, taskID, itemClass, dataAttr) => {
   const debouncedCounter = debounce(updateCompletedCount, 1000);
   let listItem = document.createElement("li");
@@ -261,7 +247,7 @@ const createListItem = (content, taskID, itemClass, dataAttr) => {
     e.preventDefault();
   });
 
-  let newSpan = listItem.appendChild(createSpan(content));
+  listItem.appendChild(createSpan(content));
 
   let newDel = listItem.appendChild(genListButton("delete"));
   newDel.addEventListener("click", (e) => {
@@ -306,21 +292,6 @@ function createSpan(text) {
   newSpan.classList.add("itemSpan");
   newSpan.innerText = text;
   return newSpan;
-}
-
-function makeVisible(element) {
-  setTimeout(() => {
-    // First, change the display property to "flex"
-    element.style.display = "flex";
-  }, 200);
-}
-function makeHidden(element) {
-  element.style.display = "none";
-  // let toMakeHidden = document.getElementsByClassName("listHidden");
-  // const elementsArray = Array.from(toMakeHidden);
-  // elementsArray.forEach((item) => {
-  //
-  // });
 }
 
 const createDropdown = () => {
@@ -558,12 +529,6 @@ function createCategoryBox(name, categoryID) {
   }
 }
 
-function getRandomColorClass() {
-  const colorClasses = ["pink", "orange", "yellow"]; // List of color class names
-  const randomIndex = Math.floor(Math.random() * colorClasses.length);
-  return colorClasses[randomIndex];
-}
-
 function rename(element) {
   element.contentEditable = true;
   element.focus();
@@ -616,7 +581,6 @@ function addCategoryToDom() {
       if (enterName.value !== "" && enterName.value !== undefined) {
         categoryName = enterName.value;
         inputWrapper.style.display = "none";
-        //inputWrapper.removeChild(enterName);
         try {
           const postedCat = await postCategory(categoryName);
           const categoryId = postedCat.data._id;
