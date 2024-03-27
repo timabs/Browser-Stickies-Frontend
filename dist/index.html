@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="main-style.css" />
+    <title>Browser Stickies!</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="manifest" href="/site.webmanifest" />
+  </head>
+  <body id="main-body">
+    <div class="theme-switch-container">
+      <input
+        type="radio"
+        class="theme-switch"
+        name="theme-switch"
+        id="theme-switch1"
+        data-theme="theme-light"
+      />
+      <label for="theme-switch1" class="switch-label">Light</label>
+      <input
+        type="radio"
+        class="theme-switch"
+        name="theme-switch"
+        id="theme-switch2"
+        data-theme="theme-dark"
+      />
+      <label for="theme-switch2" class="switch-label">Dark</label>
+      <input
+        type="radio"
+        class="theme-switch"
+        name="theme-switch"
+        id="theme-switch3"
+        data-theme="theme-pastel"
+      />
+      <label for="theme-switch3" class="switch-label">Pastel</label>
+      <input
+        type="radio"
+        class="theme-switch"
+        name="theme-switch"
+        id="theme-switch4"
+        data-theme="theme-nature"
+      />
+      <label for="theme-switch4" class="switch-label">Nature</label>
+    </div>
+
+    <div id="allDiv">
+      <div class="centering-container">
+        <h1 class="titleHeader">Get it Done!</h1>
+      </div>
+
+      <div id="categoryUserWrap">
+        <div id="categoryContainer">
+          <button id="categoryButton">Create Category</button>
+          <div id="inputFieldWrapper"></div>
+        </div>
+        <input
+          type="text"
+          id="userInput"
+          placeholder="What do you need to get done?"
+        />
+      </div>
+
+      <div id="listAndBoxWrapper">
+        <div id="listContainer" data-zone="dropzone">
+          <span id="genTasks" class="subheaders">General Tasks</span>
+          <ol id="taskList"></ol>
+        </div>
+        <div class="boxContainer">
+          <span class="subheaders">Categories</span>
+        </div>
+      </div>
+    </div>
+    <div id="itemsCompletedContainer">
+      <div class="itemsCompleted">
+        <span>Total Items Completed: </span><span id="completedCount">0</span>
+      </div>
+    </div>
+
+    <script type="module" src="../dist/main.js"></script>
+  </body>
+</html>

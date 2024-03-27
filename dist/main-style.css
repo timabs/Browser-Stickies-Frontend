@@ -1,0 +1,539 @@
+* {
+  font-family: "Roboto";
+}
+
+:root {
+  --bg-color: #d2d3db;
+  --small-head-color: #4684ad;
+  --sticky-color: #f4e3ad;
+  --sticky-border: #c3b279;
+  --task-field: #e4e5f1;
+  --task-field-border: #9394a5;
+  --cat-field: #e4e5f1;
+  --cat-field-border: #9394a5;
+  --item-comp: #484b6a;
+  --item-comp-border: #484b6a;
+  --interior-bg: #fafafa;
+  --title-color: linear-gradient(
+    180deg,
+    rgba(70, 132, 173, 1) 0%,
+    rgba(244, 227, 173, 1) 100%
+  );
+  --subheaders: var(--small-head-color);
+
+  /* Add more variables for different colors */
+}
+
+/* Theme classes */
+.theme-pastel {
+  --bg-color: #cae6f9;
+  --small-head-color: #4684ad;
+  --sticky-color: #ffe694;
+  --sticky-border: #c4b279;
+  --task-field: #eed4d4;
+  --task-field-border: #ccaaaa;
+  --cat-field: #c5dcec;
+  --cat-field-border: #22608a;
+  --item-comp: #6c72a0;
+  --item-comp-border: #3c4063;
+  --interior-bg: #f6efe7;
+  --title-color: linear-gradient(
+    180deg,
+    rgba(238, 212, 212, 1) 0%,
+    rgba(124, 182, 220, 1) 100%
+  );
+  --subheaders: var(--small-head-color);
+}
+
+.theme-dark {
+  --bg-color: #43468a;
+  --small-head-color: #16274a;
+  --sticky-color: #b4b7fa;
+  --sticky-border: #1e2430;
+  --task-field: #e4e5f1;
+  --task-field-border: #9394a5;
+  --cat-field: #e4e5f1;
+  --cat-field-border: #9394a5;
+  --item-comp: #484b6a;
+  --item-comp-border: #1e2430;
+  --interior-bg: #30314d;
+  --title-color: radial-gradient(
+    circle,
+    rgba(213, 216, 233, 1) 0%,
+    rgba(122, 127, 255, 1) 100%
+  );
+  --subheaders: var(--sticky-color);
+}
+
+/* Define more theme classes as needed */
+.theme-nature {
+  --bg-color: #184e2e;
+  --small-head-color: #232927;
+  --sticky-color: #af7359;
+  --sticky-border: #184e2e;
+  --task-field: #dfd0c0;
+  --task-field-border: var(--item-comp);
+  --cat-field: #dfd0c0;
+  --cat-field-border: var(--item-comp);
+  --item-comp: #6c412e;
+  --item-comp-border: #6c412e;
+  --interior-bg: #2b3c2c;
+  --title-color: linear-gradient(
+    180deg,
+    rgba(161, 232, 165, 1) 0%,
+    rgba(65, 138, 74, 1) 100%
+  );
+  --subheaders: var(--task-field);
+}
+.theme-switch-container {
+  position: absolute;
+  margin-left: 5px;
+  top: 0;
+  left: 0;
+  display: block; /* Display the buttons in a row */
+}
+
+.theme-switch {
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+}
+.theme-switch:focus + .switch-label,
+.switch-label:hover {
+  box-shadow: 0 0 10px var(--sticky-color);
+  border: 3px solid var(--sticky-color);
+  border-radius: 5px;
+}
+
+.switch-label {
+  background: var(--small-head-color);
+  border: 3px solid var(--text-color);
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 100%;
+  margin: 5px 0 5px 0px;
+  padding: 3px 6px;
+  transition: box-shadow 0.2s, border 0.2s;
+}
+
+#totalWrapper {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: fit-content;
+}
+input[type="text"] {
+  border: 3px;
+  border-radius: 0.5vw;
+}
+#userInput {
+  background-color: var(--task-field);
+  min-width: 25vw;
+  min-height: 3.4vh;
+  max-height: fit-content;
+  max-width: fit-content;
+  border-color: var(--task-field-border);
+  border-style: solid;
+  text-align: center;
+  overflow-wrap: break-word;
+  word-break: break-all;
+  font-weight: extra-light;
+  font-size: 1.5em;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.labelStyle {
+  display: grid;
+  opacity: 0;
+  width: auto;
+  height: auto;
+  text-align: center;
+  font-size: 1em;
+  position: relative;
+  align-items: baseline;
+  justify-content: space-around;
+  margin-left: 3vw;
+}
+
+/* Add this style to show the select element when the dropdown is displayed */
+label[style="display: grid"] .selectCategory {
+  display: block;
+}
+
+.hideLabel {
+  display: none;
+}
+
+.selectCategory {
+  width: 9em;
+  height: 1.5em;
+  display: grid;
+  justify-content: space-evenly;
+  align-content: center;
+  align-items: start;
+  justify-items: center;
+  text-align: center;
+}
+
+#categoryInput {
+  font-size: 1.25em;
+}
+
+#categoryContainer {
+  margin-right: 0.3vw;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+#categoryUserWrap {
+  display: flex;
+  flex-direction: row;
+  align-content: flex-start;
+  align-items: center;
+  justify-content: center;
+}
+
+#categoryButton {
+  background-color: var(--cat-field);
+  border: 3px solid var(--task-field-border);
+  font-weight: bold;
+  width: 8vw;
+  height: 5vh;
+  font-size: 1.15rem;
+  border-radius: 0.5vw;
+  outline: 0;
+  appearance: unset;
+}
+
+.categoryName {
+  display: inline-block;
+  color: var(--small-head-color);
+  margin: 3.4%;
+  font-size: calc(1.5em / 16 * 100vw);
+  padding: 0;
+  margin: 0.2vw;
+  border: none;
+  outline: none;
+  background: none;
+  cursor: pointer;
+  user-select: none;
+  overflow-wrap: break-word;
+  word-break: break-all;
+}
+
+.renameInput {
+  border: none;
+  border-bottom: 2px solid black;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  background: none;
+  transition: opacity 0.3s;
+  opacity: 0;
+}
+
+.category-delete {
+  display: inline;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 13px;
+  height: 13px;
+  padding: 0px;
+  border: none;
+  background-color: transparent;
+  background-image: url("/Assets/delete-button.gif");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  justify-content: flex-end;
+  align-content: center;
+}
+
+.category-delete.hidden {
+  opacity: 0;
+}
+
+#inputFieldWrapper {
+  position: absolute;
+  /* Set the wrapper to absolute positioning */
+  top: 0;
+  left: 0;
+  font-size: 1em;
+  display: none;
+  /* Hide the wrapper by default */
+  background-color: #f2f2f2;
+  padding: 10px;
+  z-index: 1;
+  /* Set a higher z-index to make sure the input field appears above other elements */
+}
+
+#allDiv {
+  display: flex;
+  background-color: var(--interior-bg);
+  max-width: 100vw;
+  text-align: center;
+  border: 3px solid var(--sticky-border);
+  border-radius: 1vw;
+  padding: 1%;
+  overflow: auto;
+  align-content: center;
+  flex-direction: column;
+  /* Stack children vertically */
+  align-items: center;
+  /* Center horizontally */
+}
+
+.centering-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  min-width: 40vw;
+}
+
+#listAndBoxWrapper {
+  display: flex;
+  grid-template-columns: 50% 50%;
+  margin-top: 1.3vh;
+  justify-items: center;
+  justify-content: center;
+}
+
+.boxContainer {
+  display: grid;
+  box-sizing: border-box;
+  flex-grow: 1; /* Allow containers to grow and fill available space */
+  flex-basis: 50%; /* Start with equal width */
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-column-gap: 10px;
+  overflow-wrap: break-word;
+  /* Allow the boxes to wrap to the next line if needed */
+  flex-direction: row;
+  justify-items: center;
+  align-items: start;
+}
+
+.categoryBox {
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2vh;
+  background-color: var(--sticky-color);
+  border: 3px solid var(--sticky-border);
+  border-radius: 0.5vw;
+  overflow: auto;
+  position: relative;
+  box-sizing: border-box;
+  min-width: 12em;
+  min-height: 5em;
+  max-width: 100%;
+  /* Add this property to allow the box to expand */
+  width: calc(100% - 20px);
+}
+
+.itemsCompleted {
+  display: flex;
+  align-items: center;
+  color: #f2f2f2;
+  font-weight: extra-light;
+  text-align: center;
+  font-size: 1.2em;
+  border-radius: 0.5vw;
+  background-color: var(--item-comp);
+  border: 2px solid;
+  border-color: var(--item-comp-border);
+  padding: 0.3em;
+  max-height: 4vh;
+}
+
+#itemsCompletedContainer {
+  display: flex;
+  align-self: flex-end;
+  /* Push to the bottom right */
+  margin-top: 1.5vh;
+  /* Add some margin to separate from allDiv */
+  margin-left: 27vw;
+}
+
+.itemsCompleted span:first-child {
+  margin-right: 0.4vw;
+  /* Add some space between the text and count number */
+}
+
+.titleHeader {
+  text-align: center;
+  font-weight: bold;
+  font-size: 7vw;
+  margin-block-start: 0.1em;
+  margin-block-end: 0.1em;
+  background-image: var(--title-color);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+#listContainer {
+  flex-grow: 1; /* Allow containers to grow and fill available space */
+  flex-basis: 50%; /* Start with equal width */
+  text-align: center;
+  margin-right: 1vw;
+  margin-left: 1vw;
+  flex-wrap: nowrap;
+  align-content: center;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+  word-break: break-all;
+  border-radius: 0.5vw;
+  min-width: 10vw;
+}
+#genTasks {
+  margin-inline: 1vw;
+}
+
+#taskList {
+  display: block;
+  list-style: none;
+  /* To add some spacing between the list items */
+  padding-left: 0px;
+  margin-top: auto;
+  text-align: center;
+  overflow: auto;
+}
+
+.subheaders {
+  display: block;
+  color: var(--subheaders);
+  font-size: 1.5rem;
+  font-weight: 600;
+  min-width: fit-content;
+  text-align: center;
+}
+
+.listItem {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  flex-direction: row;
+  padding: 5px;
+  padding-right: 5px;
+  background-color: #d2d3db;
+  border-radius: 0.5vw;
+  font-weight: regular;
+  font-size: larger;
+  cursor: move;
+  margin-bottom: 1vw;
+  margin-inline: 1vw;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.drag-target {
+  box-shadow: 0px 5px 7px 3px var(--sticky-color);
+  transition: box-shadow 0.2s ease-in-out;
+}
+[data-zone="dropzone"] {
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.categoryItem {
+  /*display: flex; */
+  display: grid;
+  grid-template-columns: auto auto auto;
+  flex-direction: row;
+  background-color: #f2f2f2;
+  border-radius: 5px;
+  margin-bottom: 5%;
+  margin-left: 3%;
+  margin-right: 3%;
+  font-weight: regular;
+  font-size: larger;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  overflow-wrap: break-word;
+  cursor: move;
+  margin-inline: 1vw;
+}
+
+.completed {
+  text-decoration: line-through;
+  /* Apply the strikethrough */
+  opacity: 0;
+  /* Fade out the list item */
+  transition: opacity 1s;
+  /* Apply a 0.5s transition for the fade-out effect */
+}
+
+.delete-button {
+  width: 13px;
+  height: 13px;
+  padding: none;
+  border: none;
+  background-color: transparent;
+  background-image: url("/Assets/delete-button.gif");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  margin-top: 0.45vw;
+  opacity: 0; /* Initially hide the buttons */
+  transition: opacity 0.2s ease-in-out; /* Apply transition to opacity */
+}
+
+.plus-button {
+  width: 13px;
+  height: 13px;
+  padding: none;
+  border: none;
+  background-color: transparent;
+  background-image: url("/Assets/icons8-plus-button.gif");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  margin-top: 0.45vw;
+  margin-left: 0.25vw;
+  opacity: 0; /* Initially hide the buttons */
+  transition: opacity 0.2s ease-in-out; /* Apply transition to opacity */
+}
+.listItem:hover .delete-button,
+.listItem:hover .plus-button,
+.categoryItem:hover .delete-button,
+.categoryItem:hover .plus-button {
+  opacity: 1; /* Show the buttons on hover */
+}
+
+#main-body {
+  display: grid;
+  min-height: 100vh;
+  background-color: var(--bg-color);
+  overflow: auto;
+  align-items: center;
+  justify-items: center;
+  align-content: center;
+  font-family: "Roboto";
+  transition: all 0.3s ease-in-out;
+}
+
+.itemSpan {
+  display: flex;
+  margin-left: 1.1vw;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease-in-out;
+}
