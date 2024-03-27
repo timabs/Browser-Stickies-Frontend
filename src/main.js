@@ -1,5 +1,18 @@
-//next time, try to modularize from the start lol
-const bodyBoy = document.getElementById("bodyBoy");
+import {
+  deleteTask,
+  fetchCategories,
+  fetchTasks,
+  httpDelCat,
+  httpPatchCat,
+  patchTask,
+  postCategory,
+  postTask,
+} from "./http/http.js";
+import axios from "https://cdn.skypack.dev/axios";
+import { checkUID } from "./uid.js";
+import { createDropzones, updateDropzones } from "./dnd/dropzones.js";
+
+const body = document.getElementById("main-body");
 const userInput = document.getElementById("userInput");
 const taskList = document.getElementById("taskList");
 const inputPlaceholder = "What do you need to get done?";
@@ -10,75 +23,15 @@ const generatedListItems = [];
 const generatedCategoryItems = [];
 let completedItemsCount = 0;
 const allDropdowns = [];
-const categoryColors = ["#FF5733", "#33FF57", "#5733FF"];
 let allDropzones;
-const apiURL = "https://sticky-notes-0fbt.onrender.com";
 axios.defaults.withCredentials = true;
+checkUID();
 
 document.addEventListener("DOMContentLoaded", async function () {
   await showCategories();
   await showTasks();
-  createDropzones();
+  createDropzones(allDropzones, taskList);
 });
-
-function createDropzones() {
-  allDropzones = updateDropzones();
-
-  const dzArray = Array.from(allDropzones);
-
-  dzArray.forEach((dropzone, index) => {
-    dropzone.addEventListener("dragover", (e) => {
-      e.preventDefault();
-      dropzone.classList.add("drag-target");
-    });
-    dropzone.addEventListener("dragleave", (e) => {
-      e.preventDefault();
-      dropzone.classList.remove("drag-target");
-    });
-
-    dropzone.addEventListener("drop", (e) => {
-      e.preventDefault();
-      const sourceTaskID = e.dataTransfer.getData("text/plain");
-      const sourceListItem = document.querySelector(".dragging");
-
-      if (dropzone.id === "listContainer") {
-        sourceListItem.classList.remove("categoryItem");
-        sourceListItem.classList.add("listItem");
-        dropzone.classList.remove("drag-target");
-
-        const afterElem = getDragAfterElement(dropzone, e.clientY); //e.clientY -> y pos of mouse on screen
-        if (afterElem === null) {
-          taskList.appendChild(sourceListItem);
-        } else {
-          taskList.insertBefore(sourceListItem, afterElem);
-        }
-        axios.patch(`${apiURL}/api/v1/theTasks/${sourceTaskID}`, {
-          category: "",
-        });
-      } else {
-        dropzone.classList.remove("drag-target");
-        sourceListItem.classList.remove("listItem");
-        sourceListItem.classList.add("categoryItem");
-        const afterElem = getDragAfterElement(dropzone, e.clientY); //e.clientY -> y pos of mouse on screen
-        if (afterElem === null) {
-          dropzone.appendChild(sourceListItem);
-        } else {
-          dropzone.insertBefore(sourceListItem, afterElem);
-        }
-
-        const newCategoryName = dropzone.getAttribute("data-category-name");
-        axios.patch(`${apiURL}/api/v1/theTasks/${sourceTaskID}`, {
-          category: newCategoryName,
-        });
-      }
-    });
-  });
-}
-
-function updateDropzones() {
-  return document.querySelectorAll('[data-zone="dropzone"]');
-}
-
 function debounce(func, delay) {
   let timeoutId;
 
@@ -90,24 +43,78 @@ function debounce(func, delay) {
   };
 }
 
-function getDragAfterElement(dropzone, y) {
-  const draggables = [
-    ...dropzone.querySelectorAll(".draggable:not(.dragging)"),
-  ]; //gets all draggables in container except the one being dragged
+// function createDropzones() {
+//   allDropzones = updateDropzones();
 
-  return draggables.reduce(
-    (closest, child) => {
-      const box = child.getBoundingClientRect();
-      const offset = y - box.top - box.height / 2;
-      if (offset < 0 && offset > closest.offset) {
-        return { offset: offset, element: child };
-      } else {
-        return closest;
-      }
-    },
-    { offset: Number.NEGATIVE_INFINITY }
-  ).element;
-}
+//   const dzArray = Array.from(allDropzones);
+
+//   dzArray.forEach((dropzone, index) => {
+//     dropzone.addEventListener("dragover", (e) => {
+//       e.preventDefault();
+//       dropzone.classList.add("drag-target");
+//     });
+//     dropzone.addEventListener("dragleave", (e) => {
+//       e.preventDefault();
+//       dropzone.classList.remove("drag-target");
+//     });
+
+//     dropzone.addEventListener("drop", (e) => {
+//       e.preventDefault();
+//       const sourceTaskId = e.dataTransfer.getData("text/plain");
+//       const sourceListItem = document.querySelector(".dragging");
+
+//       if (dropzone.id === "listContainer") {
+//         sourceListItem.classList.remove("categoryItem");
+//         sourceListItem.classList.add("listItem");
+//         dropzone.classList.remove("drag-target");
+
+//         const afterElem = getDragAfterElement(dropzone, e.clientY); //e.clientY -> y pos of mouse on screen
+//         if (afterElem === null) {
+//           taskList.appendChild(sourceListItem);
+//         } else {
+//           taskList.insertBefore(sourceListItem, afterElem);
+//         }
+//         patchTask(sourceTaskId, "");
+//       } else {
+//         dropzone.classList.remove("drag-target");
+//         sourceListItem.classList.remove("listItem");
+//         sourceListItem.classList.add("categoryItem");
+//         const afterElem = getDragAfterElement(dropzone, e.clientY); //e.clientY -> y pos of mouse on screen
+//         if (afterElem === null) {
+//           dropzone.appendChild(sourceListItem);
+//         } else {
+//           dropzone.insertBefore(sourceListItem, afterElem);
+//         }
+
+//         const newCategoryName = dropzone.getAttribute("data-category-name");
+//         patchTask(sourceTaskId, newCategoryName);
+//       }
+//     });
+//   });
+// }
+
+// function updateDropzones() {
+//   return document.querySelectorAll('[data-zone="dropzone"]');
+// }
+
+// function getDragAfterElement(dropzone, y) {
+//   const draggables = [
+//     ...dropzone.querySelectorAll(".draggable:not(.dragging)"),
+//   ]; //gets all draggables in container except the one being dragged
+
+//   return draggables.reduce(
+//     (closest, child) => {
+//       const box = child.getBoundingClientRect();
+//       const offset = y - box.top - box.height / 2;
+//       if (offset < 0 && offset > closest.offset) {
+//         return { offset: offset, element: child };
+//       } else {
+//         return closest;
+//       }
+//     },
+//     { offset: Number.NEGATIVE_INFINITY }
+//   ).element;
+// }
 
 function handleThemeSwitching() {
   const themeSwitches = document.querySelectorAll(".theme-switch");
@@ -123,7 +130,7 @@ function handleThemeSwitching() {
 
   const savedTheme = getThemeFromLocalStorage();
   if (savedTheme) {
-    bodyBoy.className = savedTheme;
+    body.className = savedTheme;
     const correspondingSwitch = document.querySelector(
       `[data-theme="${savedTheme}"]`
     );
@@ -137,10 +144,10 @@ function handleThemeSwitching() {
       if (themeSwitch.checked) {
         const themeClass = themeSwitch.getAttribute("data-theme");
         if (themeClass === "theme-light") {
-          bodyBoy.removeAttribute("class");
+          body.removeAttribute("class");
           setThemeInLocalStorage(themeClass);
         } else {
-          bodyBoy.className = themeClass;
+          body.className = themeClass;
           setThemeInLocalStorage(themeClass);
         }
       }
@@ -151,11 +158,9 @@ handleThemeSwitching();
 
 async function showTasks() {
   try {
-    const response = await axios.get(`${apiURL}/api/v1/theTasks`); // Fetch existing tasks from the server
+    const existingTasks = await fetchTasks();
 
-    const existingTasks = response.data;
-
-    existingTasks.myTasks.forEach((task) => {
+    existingTasks.forEach((task) => {
       if (!task.category) {
         taskList.appendChild(
           createListItem(task.content, task._id, "listItem", "data-task-id")
@@ -177,8 +182,6 @@ async function showTasks() {
         );
       }
     });
-
-    debounce(updateCompletedCount, 1000);
   } catch (error) {
     // Update completed count after adding existing tasks
     console.error("Error fetching existing tasks: ", error);
@@ -186,14 +189,13 @@ async function showTasks() {
 }
 async function showCategories() {
   try {
-    const response = await axios.get(`${apiURL}/api/v1/theCategories`);
-    const existingCategories = response.data;
-    existingCategories.categories.forEach((category) => {
+    const existingCategories = await fetchCategories();
+    existingCategories.forEach((category) => {
       boxContainer.appendChild(createCategoryBox(category.name, category._id));
     });
     allDropzones = updateDropzones();
   } catch (error) {
-    console.error("Error fetching existing tasks: ", error);
+    console.error("Error fetching existing categories: ", error);
   }
 }
 userInput.placeholder = inputPlaceholder;
@@ -216,11 +218,7 @@ async function addTask() {
       userInput.placeholder = "It can't be empty.";
     } else {
       const content = userInput.value;
-      //dont append all at once
-      const response = await axios.post(`${apiURL}/api/v1/theTasks`, {
-        content,
-      });
-      const myTask = response.data;
+      const myTask = postTask(content);
       const listItem = createListItem(
         content,
         myTask._id,
@@ -284,7 +282,7 @@ const createListItem = (content, taskID, itemClass, dataAttr) => {
   listItem.addEventListener("click", async (e) => {
     debouncedCounter();
     listItem.classList.add("completed");
-    const taskID = getAttributeOrFallback(
+    const taskId = getAttributeOrFallback(
       listItem,
       "data-task-id",
       "data-catitem-id"
@@ -298,11 +296,7 @@ const createListItem = (content, taskID, itemClass, dataAttr) => {
       }
     }, 1000);
 
-    try {
-      await axios.delete(`${apiURL}/api/v1/theTasks/${taskID}`);
-    } catch (error) {
-      console.log(error);
-    }
+    await deleteTask(taskId);
   });
   return listItem;
 };
@@ -419,7 +413,7 @@ function getAttributeOrFallback(element, attribute1, attribute2) {
 
 async function addsItem(e) {
   let listItem = e.target.closest("li");
-  const taskID = getAttributeOrFallback(
+  const taskId = getAttributeOrFallback(
     listItem,
     "data-task-id",
     "data-catitem-id"
@@ -433,7 +427,7 @@ async function addsItem(e) {
 
   let categoryItem = createListItem(
     listItemText,
-    taskID,
+    taskId,
     "categoryItem",
     "data-catitem-id"
   );
@@ -445,14 +439,7 @@ async function addsItem(e) {
     selectedCategory.parentElement.appendChild(categoryItem);
   }
   generatedCategoryItems.push(categoryItem);
-  try {
-    const response = await axios.patch(`${apiURL}api/v1/theTasks/${taskID}`, {
-      category: optionText,
-    });
-  } catch (error) {
-    console.log(`Error updating task category: ${error}`);
-  }
-
+  patchTask(taskId, optionText);
   listItem.remove();
 }
 
@@ -466,12 +453,12 @@ async function deleteItem(e, arr) {
   }
   try {
     if (parentListItem.classList.contains("categoryItem")) {
-      const taskID = parentListItem.getAttribute("data-catitem-id");
+      const taskId = parentListItem.getAttribute("data-catitem-id");
       parentListItem.remove();
-      await axios.delete(`${apiURL}/api/v1/theTasks/${taskID}`);
+      await deleteTask(taskId);
     } else {
-      const taskID = parentListItem.getAttribute("data-task-id");
-      await axios.delete(`${apiURL}/api/v1/theTasks/${taskID}`);
+      const taskId = parentListItem.getAttribute("data-task-id");
+      await deleteTask(taskId);
       parentListItem.remove();
     }
   } catch (error) {
@@ -491,8 +478,8 @@ async function deleteCategory(e, arr) {
   try {
     if (parentElem.tagName === "DIV") {
       //if the item to delete is a WHOLE CATEGORY/BOX
-      const categoryID = parentElem.getAttribute("data-category-id");
-      await axios.delete(`${apiURL}/api/v1/theCategories/${categoryID}`);
+      const categoryId = parentElem.getAttribute("data-category-id");
+      await httpDelCat(categoryId);
       parentElem.remove();
     }
   } catch (error) {
@@ -600,10 +587,8 @@ function rename(element) {
         saveChanges(element, "data-category");
         saveChanges(elementParent, "data-category-name");
         const newCatName = elementParent.getAttribute("data-category-name");
-        const categoryID = elementParent.getAttribute("data-category-id");
-        axios.patch(`${apiURL}/api/v1/theCategories/${categoryID}`, {
-          name: newCatName,
-        });
+        const catId = elementParent.getAttribute("data-category-id");
+        await httpPatchCat(catId, newCatName);
       }
     }
   });
@@ -633,12 +618,9 @@ function addCategoryToDom() {
         inputWrapper.style.display = "none";
         //inputWrapper.removeChild(enterName);
         try {
-          const response = await axios.post(`${apiURL}/api/v1/theCategories/`, {
-            name: categoryName,
-          });
-
-          const categoryID = response.data.data._id;
-          const newCategory = createCategoryBox(categoryName, categoryID);
+          const postedCat = await postCategory(categoryName);
+          const categoryId = postedCat.data._id;
+          const newCategory = createCategoryBox(categoryName, categoryId);
           boxContainer.appendChild(newCategory);
         } catch (error) {
           console.error("Error creating category: ", error);

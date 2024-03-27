@@ -516,7 +516,7 @@ label[style="display: grid"] .selectCategory {
   opacity: 1; /* Show the buttons on hover */
 }
 
-#bodyBoy {
+#main-body {
   display: grid;
   min-height: 100vh;
   background-color: var(--bg-color);
