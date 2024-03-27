@@ -8,7 +8,7 @@ import {
   postCategory,
   postTask,
 } from "./http/http.js";
-import axios from "https://cdn.skypack.dev/axios";
+import axios from "axios";
 import { checkUID } from "./uid.js";
 import { createDropzones, updateDropzones } from "./dnd/dropzones.js";
 

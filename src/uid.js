@@ -1,4 +1,4 @@
-import { v4 } from "https://jspm.dev/uuid";
+import { v4 } from "uuid";
 
 export function genNewUID() {
   v4();

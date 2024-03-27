@@ -6,10 +6,14 @@
   "name": "browser-stickies-frontend",
   "description": "**To Add:**",
   "version": "1.0.0",
-  "main": "index.js",
-  "devDependencies": {},
+  "main": "main.js",
+  "devDependencies": {
+    "webpack": "^5.91.0",
+    "webpack-cli": "^5.1.4"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
   },
   "keywords": [],
   "author": "",

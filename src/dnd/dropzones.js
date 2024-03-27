@@ -43,7 +43,6 @@ function handleDrop(e, taskList, dropzone) {
   e.preventDefault();
   const sourceTaskId = e.dataTransfer.getData("text/plain");
   const sourceListItem = document.querySelector(".dragging");
-  console.log(e.target);
   if (dropzone.id === "listContainer") {
     sourceListItem.classList.remove("categoryItem");
     sourceListItem.classList.add("listItem");

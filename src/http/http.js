@@ -1,4 +1,4 @@
-import axios from "https://cdn.skypack.dev/axios";
+import axios from "axios";
 const apiURL = "https://sticky-notes-0fbt.onrender.com";
 //const tempAPI = "http://localhost:5000";
 
