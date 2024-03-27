@@ -1,7 +1,65 @@
 import * as app from "../app.js";
-import { deleteTask } from "../http/http.js";
+import { deleteTask, fetchTasks, patchTask, postTask } from "../http/http.js";
 import { updateCompletedCount, updateDropdown } from "../state/updateState.js";
 import debounce from "../utils/debounce.js";
+import { genListButton } from "../utils/general.js";
+
+export async function showTasks() {
+  try {
+    const existingTasks = await fetchTasks();
+
+    existingTasks.forEach((task) => {
+      if (!task.category) {
+        app.taskList.appendChild(
+          createListItem(task.content, task._id, "listItem", "data-task-id")
+        );
+      } else if (task.category) {
+        const itemsCategory = task.category;
+
+        const categoryToMatch = document.querySelector(
+          `.categoryBox[data-category-name="${itemsCategory}"]`
+        );
+
+        categoryToMatch.appendChild(
+          createListItem(
+            task.content,
+            task._id,
+            "categoryItem",
+            "data-catitem-id"
+          )
+        );
+      }
+    });
+  } catch (error) {
+    console.error("Error fetching existing tasks: ", error);
+  }
+}
+
+export async function addTask() {
+  const emptyWarn = "It can't be empty.";
+  try {
+    if (userInput.value === "" || userInput.value === undefined) {
+      app.setPlaceholder(emptyWarn);
+    } else {
+      const content = userInput.value;
+      const myTask = await postTask(content);
+      const listItem = createListItem(
+        content,
+        myTask._id,
+        "listItem",
+        "data-task-id"
+      );
+      app.taskList.appendChild(listItem);
+
+      userInput.value = "";
+      setTimeout(() => {
+        app.setPlaceholder();
+      }, 1000);
+    }
+  } catch (error) {
+    console.error("Error creating task: ", error);
+  }
+}
 
 function createSpan(text) {
   let newSpan = document.createElement("span");
@@ -36,12 +94,12 @@ const createListItem = (content, taskID, itemClass, dataAttr) => {
 
   listItem.appendChild(createSpan(content));
 
-  let newDel = listItem.appendChild(app.genListButton("delete"));
+  let newDel = listItem.appendChild(genListButton("delete"));
   newDel.addEventListener("click", (e) => {
     deleteItem(e, app.generatedListItems);
   });
 
-  let newPlus = listItem.appendChild(app.genListButton("plus"));
+  let newPlus = listItem.appendChild(genListButton("plus"));
   let newDropdown = createDropdown();
   newPlus.insertAdjacentElement("afterend", newDropdown);
   app.generatedListItems.push(listItem);
@@ -74,6 +132,60 @@ const createListItem = (content, taskID, itemClass, dataAttr) => {
   return listItem;
 };
 
+export async function addItemToCategory(e) {
+  let listItem = e.target.closest("li");
+  const taskId = app.getAttributeOrFallback(
+    listItem,
+    "data-task-id",
+    "data-catitem-id"
+  );
+
+  let optionText = e.target.value;
+
+  let listItemText = listItem
+    .querySelector(".itemSpan")
+    .childNodes[0].textContent.trim(); // Get the text of the listItem
+
+  let categoryItem = createListItem(
+    listItemText,
+    taskId,
+    "categoryItem",
+    "data-catitem-id"
+  );
+
+  let selectedCategory = document.querySelector(
+    `.categoryBox h3[data-category="${optionText}"]`
+  );
+  if (selectedCategory) {
+    selectedCategory.parentElement.appendChild(categoryItem);
+  }
+  patchTask(taskId, optionText);
+  listItem.remove();
+}
+
+async function deleteItem(e, arr) {
+  e.stopPropagation();
+  const delButton = e.target;
+  const parentListItem = delButton.parentNode;
+  const index = arr.indexOf(parentListItem);
+  if (index !== -1) {
+    arr.splice(index, 1);
+  }
+  try {
+    if (parentListItem.classList.contains("categoryItem")) {
+      const taskId = parentListItem.getAttribute("data-catitem-id");
+      parentListItem.remove();
+      await deleteTask(taskId);
+    } else {
+      const taskId = parentListItem.getAttribute("data-task-id");
+      await deleteTask(taskId);
+      parentListItem.remove();
+    }
+  } catch (error) {
+    console.error("Error deleting task:", error);
+  }
+}
+
 function createDropdown() {
   let label = document.createElement("label");
   label.innerText = "Choose a category";
@@ -95,7 +207,7 @@ function createDropdown() {
   select.addEventListener("click", (e) => {
     e.stopPropagation();
   });
-  select.addEventListener("change", app.addItemToCategory);
+  select.addEventListener("change", addItemToCategory);
   return label;
 }
 
