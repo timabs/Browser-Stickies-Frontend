@@ -6,7 +6,7 @@
   "name": "browser-stickies-frontend",
   "description": "**To Add:**",
   "version": "1.0.0",
-  "main": "main.js",
+  "main": "app.js",
   "devDependencies": {
     "webpack": "^5.91.0",
     "webpack-cli": "^5.1.4"

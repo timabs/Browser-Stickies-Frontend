@@ -25,9 +25,9 @@ let completedItemsCount = 0;
 const allDropdowns = [];
 let allDropzones;
 axios.defaults.withCredentials = true;
-checkUID();
 
 document.addEventListener("DOMContentLoaded", async function () {
+  checkUID();
   await showCategories();
   await showTasks();
   createDropzones(allDropzones, taskList);
